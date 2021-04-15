@@ -24,7 +24,55 @@ public class Calcular {
 
     @Before
     public void setUp() throws MalformedURLException {
+         /*
+        Valores previstos de flag
+        EL = Emulador Local
+        EN = Emulador na Nuvem
+        DL = Dispositivo Local
+        DN = Dispositivo na Nuvem
+         */
+        String flag = "EN";
+
         desiredCapabilities = new DesiredCapabilities();
+
+        switch (flag){
+            case "EL":
+                desiredCapabilities.setCapability("platformName", "Android");
+                desiredCapabilities.setCapability("platformVersion", "9.0"); //sdk
+                desiredCapabilities.setCapability("deviceName", "emulator-5554");
+                desiredCapabilities.setCapability("automationName", "uiautomator2");
+                desiredCapabilities.setCapability("appPackage", "com.google.android.calculator");
+                desiredCapabilities.setCapability("appActivity", "com.android.calculator2.Calculator");
+
+                remoteUrl = new URL("https://127.0.0.1:4723/wd/hub");
+                break;
+
+            case "EN":
+                desiredCapabilities.setCapability("platformName", "Android");
+                desiredCapabilities.setCapability("platformVersion", "9.0");
+                desiredCapabilities.setCapability("browserName", "");
+                desiredCapabilities.setCapability("appiumVersion", "1.19.2");
+                desiredCapabilities.setCapability("deviceName", "Samsung Galaxy S9 FHD GoogleAPI Emulator");
+                desiredCapabilities.setCapability("deviceOrientation", "portrait");
+                desiredCapabilities.setCapability("app", "storage:filename=Calculator_v7.8 (271241277)_apkpure.com.apk");
+                desiredCapabilities.setCapability("appPackage", "com.google.android.calculator");
+                desiredCapabilities.setCapability("appActivity", "com.android.calculator2.Calculator");
+                desiredCapabilities.setCapability("ensureWebviewsHavePages", true);
+                desiredCapabilities.setCapability("SAUCE_USERNAME", "marisamendes");
+                desiredCapabilities.setCapability("SAUCE_ACCESS_KEY", "1e4b16f2-e25d-426f-98f9-1a7b6cbf7a83");
+
+                URL remoteUrl = new URL("https://marisamendes:1e4b16f2-e25d-426f-98f9-1a7b6cbf7a83@ondemand.us-west-1.saucelabs.com:443/wd/hub");
+                break;
+
+            case "DL":
+                //TODO: a programar
+                break;
+
+            case "DN":
+                //TODO: a programar
+                break;
+        }
+
         desiredCapabilities.setCapability("platformName", "Android");
         desiredCapabilities.setCapability("platformVersion", "9.0");
         desiredCapabilities.setCapability("browserName", "");
@@ -56,12 +104,12 @@ public class Calcular {
 
     @When("^seleciono \"([^\"]*)\" mais \"([^\"]*)\" e pressiono o botao Igual$")
     public void selecionoMaisEPressionoOBotaoIgual(String num1, String num2)  {
-        MobileElement btn2 = (MobileElement) driver.findElementById("com.google.android.calculator:id/digit_2");
-        btn2.click();
+        MobileElement btnA = (MobileElement) driver.findElementById("com.google.android.calculator:id/digit_" + num1);
+        btnA.click();
         MobileElement btnSoma = (MobileElement) driver.findElementByAccessibilityId("plus");
         btnSoma.click();
-        MobileElement btn3 = (MobileElement) driver.findElementById("com.google.android.calculator:id/digit_3");
-        btn3.click();
+        MobileElement btnB = (MobileElement) driver.findElementById("com.google.android.calculator:id/digit_" + num2);
+        btnB.click();
         MobileElement btnIgual = (MobileElement) driver.findElementByAccessibilityId("equals");
         btnIgual.click();
 
