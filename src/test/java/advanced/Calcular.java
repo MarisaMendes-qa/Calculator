@@ -35,8 +35,6 @@ public class Calcular {
         desiredCapabilities.setCapability("appPackage", "com.google.android.calculator");
         desiredCapabilities.setCapability("appActivity", "com.android.calculator2.Calculator");
         desiredCapabilities.setCapability("ensureWebviewsHavePages", true);
-        desiredCapabilities.setCapability("SAUCE_USERNAME", "marisamendes");
-        desiredCapabilities.setCapability("SAUCE_ACCESS_KEY", "1e4b16f2-e25d-426f-98f9-1a7b6cbf7a83");
 
         remoteUrl = new URL("https://marisamendes:1e4b16f2-e25d-426f-98f9-1a7b6cbf7a83@ondemand.us-west-1.saucelabs.com:443/wd/hub");
 
