@@ -26,7 +26,8 @@ import static org.junit.Assert.assertEquals;
         private DesiredCapabilities desiredCapabilities;
         private URL remoteUrl;
         private static String nomePasta = new SimpleDateFormat("yyyy-MM-dd HH-mm").format(Calendar.getInstance().getTime());
-
+        private Massa massa;
+        private MobileElement btnOperacao;
 
         // Funções ou Métodos de Apoio
         public void print(String nomePrint) throws IOException {
@@ -137,6 +138,109 @@ import static org.junit.Assert.assertEquals;
             MobileElement lblResultadoAtual = (MobileElement) driver.findElementById("com.google.android.calculator:id/result_final");
             assertEquals(resultadoEsperado, lblResultadoAtual.getText());
 
+        }
+
+        @Given("^que utilizo a massa \"([^\"]*)\" para testar a calculadora$")
+        public void queUtilizoAMassaParaTestarACalculadora(String nomeMassa) throws MalformedURLException {
+            //Configurações para a execução do emulador na nunuvem
+            desiredCapabilities.setCapability("platformName", "Android");
+            desiredCapabilities.setCapability("platformVersion", "9.0");
+            desiredCapabilities.setCapability("browserName", "");
+            desiredCapabilities.setCapability("appiumVersion", "1.19.2");
+            desiredCapabilities.setCapability("deviceName", massa.deviceName);
+            desiredCapabilities.setCapability("deviceOrientation", "portrait");
+            desiredCapabilities.setCapability("app", "storage:filename=Calculator_v7.8 (271241277)_apkpure.com.apk");
+            desiredCapabilities.setCapability("appPackage", "com.google.android.calculator");
+            desiredCapabilities.setCapability("appActivity", "com.android.calculator2.Calculator");
+            desiredCapabilities.setCapability("ensureWebviewsHavePages", true);
+            desiredCapabilities.setCapability("SAUCE_USERNAME", "marisamendes");
+            desiredCapabilities.setCapability("SAUCE_ACCESS_KEY", "1e4b16f2-e25d-426f-98f9-1a7b6cbf7a83");
+
+            URL remoteUrl = new URL("https://marisamendes:1e4b16f2-e25d-426f-98f9-1a7b6cbf7a83@ondemand.us-west-1.saucelabs.com:443/wd/hub");
+
+            //Abrir o app (calculadora)
+            driver = new AndroidDriver(remoteUrl, desiredCapabilities); //Essas duas linhas abrem o aparelho
+        }
+
+        @When("^realizo a operacao com dois numeros$")
+        public void realizoAOperacaoComDoisNumeros() throws IOException {
+            print("Somar Dois Numeros Positivos - Passo 1 - Abriu a Calculadora");
+            MobileElement btnA = (MobileElement) driver.findElementById("com.google.android.calculator:id/digit_" + massa.num1);
+            btnA.click();
+            print("Somar Dois Numeros Positivos - Passo 2 - Clicou no botão " + massa.num1);
+
+                    // Exemplo - 1
+            //Selecionar a operação matemática
+            //Exemplo com um botão para cada das 4 operações
+            /*
+            switch (massa.operador){
+                case "+":
+                    MobileElement btnSoma = (MobileElement) driver.findElementByAccessibilityId("plus");
+                    btnSoma.click();
+                    break;
+                case "-":
+                    MobileElement btnSubtrair = (MobileElement) driver.findElementByAccessibilityId("minus");
+                    btnSubtrair.click();
+                    break;
+                case "*":
+                    MobileElement btnMultiplicar = (MobileElement) driver.findElementByAccessibilityId("multiply");
+                    btnMultiplicar.click();
+                    break;
+                case "/":
+                    MobileElement btnDividir = (MobileElement) driver.findElementByAccessibilityId("divide");
+                    btnDividir.click();
+                    break;
+
+            }*/
+
+                    //Exemplo - 2
+            //Exemplo resumido, ele ler o simbolo e transforma na operacao
+           /* switch (massa.operador){
+                case "+":
+                    btnOperacao = (MobileElement) driver.findElementByAccessibilityId("plus");
+                    btnSoma.click();
+                    break;
+                case "-":
+                   btnOperacao = (MobileElement) driver.findElementByAccessibilityId("minus");
+                    btnSubtrair.click();
+                    break;
+                case "*":
+                    btnOperacao = (MobileElement) driver.findElementByAccessibilityId("multiply");
+                    btnMultiplicar.click();
+                    break;
+                case "/":
+                   btnOperacao = (MobileElement) driver.findElementByAccessibilityId("divide");
+                    btnDividir.click();
+                    break;
+
+            }
+                   btnOperacao.click(); */
+
+                        //Exemplo - 3
+            //Ficaria mais simples se a massa já tivesse a operação ao invés do símbolo
+            btnOperacao = (MobileElement) driver.findElementByAccessibilityId(massa.operador);
+            btnOperacao.click();
+
+            print("Somar Dois Numeros Positivos - Passo 3 - Clicou no botão de Soma");
+            MobileElement btnB = (MobileElement) driver.findElementById("com.google.android.calculator:id/digit_" + massa.num2);
+            btnB.click();
+            print("Somar Dois Numeros Positivos - Passo 4 - Clicou no botão " + massa.num2);
+            MobileElement btnIgual = (MobileElement) driver.findElementByAccessibilityId("equals");
+            btnIgual.click();
+            print("Somar Dois Numeros Positivos - Passo 5 - Clicou no botão Igual");
+
+        }
+
+        @Then("^compara o resultado atual com o esperado$")
+        public void comparaOResultadoAtualComOEsperado() {
+            if(massa.operador == "/" && massa.num2 == "0"){
+                // ToDo: mapear a mensagem de erro da divisao
+            }
+            else {
+                MobileElement lblResultadoAtual = (MobileElement) driver.findElementById("com.google.android.calculator:id/result_final");
+                assertEquals(massa.resultadoEsperado, lblResultadoAtual.getText());
+
+            }
         }
     }
 

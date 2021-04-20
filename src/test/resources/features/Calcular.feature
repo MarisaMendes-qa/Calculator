@@ -15,3 +15,10 @@ Feature: Calcular
       | "7"  | "9" | "16"              |
       | "8"  | "5" | "6"               |
 
+      Scenario: Calcular Com Massa De Teste
+        Given que utilizo a massa "db/massaCalc.csv" para testar a calculadora
+        When realizo a operacao com dois numeros
+        Then compara o resultado atual com o esperado
+
+
+
